@@ -2,7 +2,8 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f0e6">
 <title>Penne z ragù w 30 minut · Pełny Talerz</title>
 <meta name="description" content="Szybkie penne z mięsnym ragù na pomidorach i parmezanie. Obiad w pół godziny, jeden garnek, zero kombinowania.">
 <meta property="og:type" content="article">
@@ -11,7 +12,7 @@
 <meta property="og:image" content="https://adampolicht.github.io/przepisy/penne.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
 <script type="application/ld+json">
 {
@@ -57,234 +58,574 @@
 <style>
   :root {
     --paper: #f6f0e6;
-    --paper-2: #efe6d6;
+    --paper-2: #eee4d2;
+    --paper-3: #e6d9c3;
     --ink: #221a14;
-    --ink-soft: #5d5046;
+    --ink-soft: #6a5c50;
     --tomato: #c8401f;
-    --rule: #d9cbb4;
+    --tomato-deep: #a3321a;
+    --basil: #4f6b3a;
+    --rule: #dccfb9;
     --serif: "Fraunces", Georgia, serif;
     --sans: "Instrument Sans", system-ui, sans-serif;
+    --gutter: clamp(20px, 5vw, 56px);
+    --ease: cubic-bezier(.2, .8, .2, 1);
   }
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 72px; }
   body {
     margin: 0;
     background: var(--paper);
     color: var(--ink);
     font: 400 17px/1.6 var(--sans);
     -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+  /* subtle paper grain */
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: .35; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .45 0 0 0 0 .35 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   a { color: inherit; }
+  img { display: block; max-width: 100%; }
+  button { font: inherit; color: inherit; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter); }
 
-  /* masthead */
+  /* ---------- masthead ---------- */
   .mast {
-    display: flex; justify-content: space-between; align-items: baseline;
-    padding: 22px clamp(16px, 5vw, 56px);
-    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px var(--gutter);
+    max-width: 1240px; margin: 0 auto;
   }
   .logo {
-    font: 800 24px/1 var(--serif);
-    font-variation-settings: "opsz" 144;
-    letter-spacing: -0.02em;
-    text-decoration: none;
+    font: 800 23px/1 var(--serif); font-variation-settings: "opsz" 144;
+    letter-spacing: -0.02em; text-decoration: none; display: flex; align-items: center; gap: 10px;
   }
-  .logo span { color: var(--tomato); }
-  .mast nav { display: flex; gap: 28px; font-size: 14px; font-weight: 500; }
-  .mast nav a { text-decoration: none; color: var(--ink-soft); }
+  .logo i {
+    width: 26px; height: 26px; border-radius: 50%; background: var(--tomato); position: relative; flex: none;
+  }
+  .logo i::after {
+    content: ""; position: absolute; inset: 6px; border-radius: 50%; border: 1.5px solid var(--paper);
+  }
+  .mast nav { display: flex; gap: 30px; font-size: 14px; font-weight: 500; }
+  .mast nav a { text-decoration: none; color: var(--ink-soft); transition: color .2s; }
   .mast nav a:hover { color: var(--ink); }
-  @media (max-width: 640px) { .mast nav { display: none; } }
+  .menu-btn { display: none; background: none; border: 0; padding: 8px; margin: -8px; cursor: pointer; }
+  .menu-btn span { display: block; width: 22px; height: 1.5px; background: var(--ink); margin: 5px 0; }
+  @media (max-width: 760px) {
+    .mast nav { display: none; }
+    .menu-btn { display: block; }
+  }
 
-  /* hero */
+  /* ---------- hero ---------- */
   .hero {
-    display: grid;
-    grid-template-columns: 1.05fr 1fr;
-    gap: clamp(28px, 5vw, 72px);
-    align-items: end;
-    padding: clamp(32px, 6vw, 80px) clamp(16px, 5vw, 56px) clamp(32px, 5vw, 56px);
-    max-width: 1320px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+    padding-top: clamp(24px, 4vw, 48px); padding-bottom: clamp(40px, 5vw, 64px);
   }
-  .kicker {
-    font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--tomato); margin: 0 0 18px;
-  }
+  .crumbs { font-size: 13px; color: var(--ink-soft); margin: 0 0 22px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .crumbs a { text-decoration: none; }
+  .crumbs b { color: var(--tomato); font-weight: 600; }
   h1 {
-    font: 800 clamp(44px, 7.4vw, 104px)/0.92 var(--serif);
-    font-variation-settings: "opsz" 144;
-    letter-spacing: -0.035em;
-    margin: 0 0 24px;
+    font: 800 clamp(46px, 6.6vw, 96px)/.92 var(--serif); font-variation-settings: "opsz" 144;
+    letter-spacing: -0.035em; margin: 0 0 22px; text-wrap: balance;
   }
-  h1 em { font-style: italic; font-weight: 400; color: var(--tomato); }
-  .lede { font: 400 21px/1.45 var(--serif); color: var(--ink-soft); max-width: 30ch; margin: 0 0 32px; }
-  .byline { font-size: 14px; color: var(--ink-soft); }
-  .byline strong { color: var(--ink); font-weight: 600; }
+  h1 em { display: block; font-style: italic; font-weight: 400; color: var(--tomato); letter-spacing: -0.03em; }
+  .lede { font: 400 20px/1.5 var(--serif); color: var(--ink-soft); max-width: 34ch; margin: 0 0 30px; text-wrap: pretty; }
 
-  .photo {
-    margin: 0; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 3px;
-    background: var(--paper-2);
+  .author { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+  .avatar {
+    width: 40px; height: 40px; border-radius: 50%; flex: none;
+    background: var(--ink); color: var(--paper);
+    display: grid; place-items: center; font: 600 15px/1 var(--serif); font-style: italic;
   }
-  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-  @media (max-width: 860px) {
-    .hero { grid-template-columns: 1fr; }
-    .photo { aspect-ratio: 4 / 3; order: -1; }
+  .author strong { display: block; font-weight: 600; }
+  .author span { color: var(--ink-soft); }
+  .actions { display: flex; gap: 8px; margin-left: auto; }
+  .icon-btn {
+    width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--rule); background: transparent;
+    display: grid; place-items: center; cursor: pointer;
+    transition: background-color .2s, border-color .2s, transform .15s var(--ease);
   }
+  .icon-btn:hover { background: var(--paper-2); border-color: var(--paper-3); }
+  .icon-btn:active { transform: scale(.94); }
+  .icon-btn svg { width: 18px; height: 18px; }
 
-  /* facts strip */
+  .photo { margin: 0; position: relative; }
+  .photo .frame {
+    aspect-ratio: 4 / 5; overflow: hidden; border-radius: 4px; background: var(--paper-2);
+    box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 30px 60px -30px rgba(80,40,20,.45);
+  }
+  .photo img { width: 100%; height: 100%; object-fit: cover; }
+  .badge {
+    position: absolute; left: -28px; bottom: 36px;
+    width: 112px; height: 112px; border-radius: 50%;
+    background: var(--tomato); color: var(--paper);
+    display: grid; place-items: center; text-align: center;
+    font: 600 13px/1.15 var(--sans); letter-spacing: .02em;
+    transform: rotate(-10deg);
+    box-shadow: 0 12px 24px -10px rgba(120,30,10,.6);
+  }
+  .badge b { display: block; font: 800 38px/1 var(--serif); font-variation-settings: "opsz" 144; letter-spacing: -0.03em; }
+
+  /* ---------- facts ---------- */
   .facts {
-    max-width: 1320px; margin: 0 auto;
-    padding: 0 clamp(16px, 5vw, 56px);
-  }
-  .facts dl {
     display: grid; grid-template-columns: repeat(4, 1fr);
     margin: 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule);
   }
   .facts div { padding: 18px 0 20px; }
-  .facts div + div { padding-left: 20px; border-left: 1px solid var(--rule); }
-  .facts dt { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); }
-  .facts dd { margin: 4px 0 0; font: 600 26px/1.1 var(--serif); }
-  @media (max-width: 640px) {
-    .facts dl { grid-template-columns: repeat(2, 1fr); }
-    .facts div:nth-child(3) { padding-left: 0; border-left: 0; }
-    .facts div:nth-child(n+3) { border-top: 1px solid var(--rule); }
-  }
+  .facts div + div { padding-left: 22px; border-left: 1px solid var(--rule); }
+  .facts dt { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+  .facts dd { margin: 4px 0 0; font: 600 28px/1.1 var(--serif); letter-spacing: -0.01em; }
+  .facts dd small { font-size: .6em; font-weight: 400; color: var(--ink-soft); margin-left: 2px; }
 
-  /* body */
+  /* ---------- mobile section tabs ---------- */
+  .tabs { display: none; }
+
+  /* ---------- recipe body ---------- */
   .recipe {
-    display: grid; grid-template-columns: 340px 1fr; gap: clamp(32px, 6vw, 96px);
-    max-width: 1320px; margin: 0 auto;
-    padding: clamp(40px, 6vw, 72px) clamp(16px, 5vw, 56px) 96px;
+    display: grid; grid-template-columns: 360px 1fr; gap: clamp(40px, 7vw, 112px);
+    padding-top: clamp(48px, 6vw, 80px); padding-bottom: clamp(56px, 7vw, 96px);
   }
-  @media (max-width: 860px) { .recipe { grid-template-columns: 1fr; } }
+  .sec-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+  h2 { font: 600 34px/1.05 var(--serif); letter-spacing: -0.02em; margin: 0; }
+  .sub { font-size: 14px; color: var(--ink-soft); margin: 6px 0 0; }
 
-  h2 {
-    font: 600 32px/1.1 var(--serif); letter-spacing: -0.02em; margin: 0 0 6px;
+  .ingredients { position: sticky; top: 28px; align-self: start; }
+
+  .stepper {
+    display: flex; align-items: center; gap: 2px; flex: none;
+    border: 1px solid var(--rule); border-radius: 999px; padding: 3px;
   }
-  .sub { font-size: 14px; color: var(--ink-soft); margin: 0 0 24px; }
+  .stepper button {
+    width: 32px; height: 32px; border-radius: 50%; border: 0; background: transparent; cursor: pointer;
+    font-size: 18px; line-height: 1; display: grid; place-items: center;
+    transition: background-color .2s, transform .15s var(--ease);
+  }
+  .stepper button:hover { background: var(--paper-2); }
+  .stepper button:active { transform: scale(.9); }
+  .stepper button:disabled { opacity: .3; cursor: default; background: transparent; }
+  .stepper output { min-width: 64px; text-align: center; font-size: 14px; font-weight: 600; }
 
-  .ingredients { position: sticky; top: 24px; align-self: start; }
-  @media (max-width: 860px) { .ingredients { position: static; } }
+  .progress { height: 3px; background: var(--rule); border-radius: 3px; overflow: hidden; margin: 0 0 6px; }
+  .progress i { display: block; height: 100%; width: 0; background: var(--basil); transition: width .4s var(--ease); }
+  .progress-label { font-size: 12px; color: var(--ink-soft); margin: 0 0 8px; letter-spacing: .02em; }
+
   .ingredients ul { list-style: none; margin: 0; padding: 0; }
   .ingredients li { border-bottom: 1px solid var(--rule); }
-  .ingredients label {
-    display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; cursor: pointer;
-  }
+  .ingredients label { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; cursor: pointer; }
   .ingredients input {
-    appearance: none; flex: none; width: 18px; height: 18px; margin: 4px 0 0;
-    border: 1.5px solid var(--ink-soft); border-radius: 50%;
-    transition: background-color .15s ease, border-color .15s ease;
+    appearance: none; -webkit-appearance: none; flex: none; width: 20px; height: 20px; margin: 2px 0 0;
+    border: 1.5px solid var(--ink-soft); border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+    transition: background-color .2s, border-color .2s;
   }
-  .ingredients input:checked { background: var(--tomato); border-color: var(--tomato); }
+  .ingredients input::after {
+    content: ""; width: 9px; height: 5px; border: 2px solid var(--paper); border-top: 0; border-right: 0;
+    transform: translateY(-1px) rotate(-45deg) scale(0); transition: transform .25s var(--ease);
+  }
+  .ingredients input:checked { background: var(--basil); border-color: var(--basil); }
+  .ingredients input:checked::after { transform: translateY(-1px) rotate(-45deg) scale(1); }
   .ingredients input:focus-visible { outline: 2px solid var(--tomato); outline-offset: 2px; }
-  .ingredients input:checked + span { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--rule); }
-  .qty { font-weight: 600; }
+  .ingredients .txt { transition: color .2s; }
+  .ingredients input:checked + .txt { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--paper-3); }
+  .qty { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .qty.bump { animation: bump .35s var(--ease); }
+  @keyframes bump { 40% { color: var(--tomato); } }
 
-  .steps ol { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+  .steps ol { list-style: none; margin: 0; padding: 0; }
   .steps li {
-    counter-increment: s;
-    display: grid; grid-template-columns: 64px 1fr; gap: 8px;
+    display: grid; grid-template-columns: 68px 1fr; gap: 8px;
     padding: 22px 0; border-bottom: 1px solid var(--rule);
-    font-size: 18px; max-width: 62ch;
+    font-size: 18px; line-height: 1.6; max-width: 64ch; cursor: pointer;
+    transition: opacity .25s;
   }
-  .steps li::before {
-    content: counter(s, decimal-leading-zero);
-    font: 400 34px/1 var(--serif); font-style: italic; color: var(--tomato);
+  .steps .n {
+    font: 400 36px/1 var(--serif); font-style: italic; color: var(--tomato);
+    font-variant-numeric: lining-nums; transition: color .25s;
+  }
+  .steps li.done { opacity: .45; }
+  .steps li.done .n { color: var(--basil); }
+  .steps .hint { font-size: 13px; color: var(--ink-soft); margin: 14px 0 0; }
+  .time {
+    display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: .02em;
+    color: var(--tomato-deep); background: rgba(200,64,31,.09);
+    padding: 2px 9px; border-radius: 99px; margin-top: 8px;
   }
 
   .tip {
-    margin-top: 40px; padding: 24px 28px; background: var(--paper-2);
-    border-left: 3px solid var(--tomato); max-width: 62ch;
+    margin-top: 40px; padding: 26px 28px 26px 30px; background: var(--paper-2);
+    border-radius: 4px; max-width: 64ch; position: relative;
   }
-  .tip strong { font-family: var(--serif); font-size: 19px; display: block; margin-bottom: 4px; }
+  .tip::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; width: 3px; background: var(--tomato); border-radius: 0 3px 3px 0; }
+  .tip strong { font: 600 italic 21px/1.2 var(--serif); display: block; margin-bottom: 6px; }
+  .tip p { margin: 0; }
+
+  /* ---------- about ---------- */
+  .about { border-top: 1px solid var(--rule); }
+  .about .wrap {
+    display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center;
+    padding-top: 48px; padding-bottom: 48px; max-width: 860px;
+  }
+  .about .avatar { width: 84px; height: 84px; font-size: 32px; background: var(--tomato); }
+  .about h3 { font: 600 24px/1.2 var(--serif); margin: 0 0 6px; }
+  .about p { margin: 0; color: var(--ink-soft); }
+
+  /* ---------- more ---------- */
+  .more { background: var(--ink); color: var(--paper); padding: clamp(56px, 7vw, 88px) 0; }
+  .more .sec-head { margin-bottom: 28px; }
+  .more h2 em { font-style: italic; font-weight: 400; color: #f08a62; }
+  .more .all { font-size: 14px; color: #bfb2a3; text-decoration: none; white-space: nowrap; }
+  .more .all:hover { color: var(--paper); }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .card { text-decoration: none; display: block; }
+  .card .img { aspect-ratio: 4 / 3; overflow: hidden; border-radius: 4px; background: #3a2e25; }
+  .card img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ease); }
+  .card:hover img { transform: scale(1.04); }
+  .card .cat { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #f08a62; margin: 16px 0 6px; }
+  .card h4 { font: 600 22px/1.2 var(--serif); margin: 0 0 6px; letter-spacing: -0.01em; }
+  .card .meta { font-size: 14px; color: #bfb2a3; }
 
   footer {
-    border-top: 1px solid var(--rule);
-    padding: 28px clamp(16px, 5vw, 56px);
-    font-size: 13px; color: var(--ink-soft);
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    background: var(--ink); color: #9c8f81; font-size: 13px;
+    border-top: 1px solid #3a2f27;
+  }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 24px; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); z-index: 50;
+    background: var(--ink); color: var(--paper); font-size: 14px; padding: 10px 18px; border-radius: 99px;
+    transform: translate(-50%, 16px); opacity: 0; pointer-events: none;
+    transition: transform .35s var(--ease), opacity .25s;
+  }
+  .toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+  /* ---------- entrance ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .rise { animation: rise .8s var(--ease) both; }
+    .rise.d1 { animation-delay: .08s; } .rise.d2 { animation-delay: .16s; } .rise.d3 { animation-delay: .24s; }
+    .photo .frame img { animation: settle 1.4s var(--ease) both; }
+    .badge { animation: pop .6s .5s var(--ease) both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+    @keyframes settle { from { transform: scale(1.06); } }
+    @keyframes pop { from { opacity: 0; transform: rotate(-30deg) scale(.6); } }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  /* ---------- tablet ---------- */
+  @media (max-width: 960px) {
+    .hero { grid-template-columns: 1fr; }
+    .recipe { grid-template-columns: 1fr; }
+    .ingredients { position: static; }
+    .cards { grid-template-columns: repeat(3, minmax(240px, 1fr)); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter); }
+    .cards::-webkit-scrollbar { display: none; }
+    .card { scroll-snap-align: start; scroll-margin-left: var(--gutter); }
+  }
+
+  /* ---------- phone ---------- */
+  @media (max-width: 760px) {
+    body { font-size: 16px; }
+    .mast { position: absolute; inset: 0 0 auto; z-index: 5; color: #fff; }
+    .mast .logo i::after { border-color: var(--tomato); }
+    .mast .logo i { background: #fff; }
+    .menu-btn span { background: #fff; }
+    .mast { background: linear-gradient(rgba(20,10,5,.45), transparent); padding-bottom: 40px; }
+
+    .hero { padding: 0; gap: 0; }
+    .photo { order: -1; }
+    .photo .frame { aspect-ratio: 1 / 1.08; border-radius: 0; box-shadow: none; }
+    .badge { left: auto; right: 20px; bottom: 44px; width: 88px; height: 88px; font-size: 11px; }
+    .badge b { font-size: 30px; }
+    .hero-text {
+      position: relative; z-index: 2; background: var(--paper);
+      margin-top: -28px; border-radius: 26px 26px 0 0;
+      padding: 30px var(--gutter) 28px;
+    }
+    .hero-text::before {
+      content: ""; position: absolute; top: 10px; left: 50%; width: 36px; height: 4px; margin-left: -18px;
+      border-radius: 4px; background: var(--paper-3);
+    }
+    .crumbs { margin-bottom: 14px; }
+    h1 { font-size: clamp(40px, 12.4vw, 56px); margin-bottom: 16px; }
+    .lede { font-size: 18px; margin-bottom: 24px; }
+
+    .facts {
+      grid-template-columns: repeat(4, 1fr); border: 0; margin: 0;
+      background: var(--paper-2); border-radius: 16px; padding: 4px;
+    }
+    .facts div, .facts div + div { padding: 12px 4px 13px; border: 0; text-align: center; }
+    .facts div + div { box-shadow: -1px 0 0 var(--paper-3); }
+    .facts dt { font-size: 10px; letter-spacing: .08em; }
+    .facts dd { font-size: 19px; }
+    .facts dd small { display: block; margin: 0; font-size: 11px; }
+
+    .tabs {
+      display: flex; position: sticky; top: 0; z-index: 10;
+      background: rgba(246,240,230,.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      padding: 10px var(--gutter); border-bottom: 1px solid var(--rule); margin-top: 20px;
+    }
+    .tabs div { display: flex; flex: 1; background: var(--paper-2); border-radius: 99px; padding: 3px; position: relative; }
+    .tabs a {
+      flex: 1; text-align: center; text-decoration: none; font-size: 14px; font-weight: 600;
+      padding: 8px 0; border-radius: 99px; color: var(--ink-soft); position: relative; z-index: 1;
+      transition: color .25s;
+    }
+    .tabs a.on { color: var(--paper); }
+    .tabs .pill {
+      position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px);
+      background: var(--ink); border-radius: 99px; transition: transform .4s var(--ease);
+    }
+    .tabs .pill.right { transform: translateX(100%); }
+
+    .recipe { padding-top: 32px; gap: 48px; }
+    h2 { font-size: 30px; }
+    .steps li { grid-template-columns: 48px 1fr; font-size: 17px; padding: 18px 0; }
+    .steps .n { font-size: 30px; }
+    .tip { padding: 22px 22px 22px 24px; margin-top: 28px; }
+
+    .about .wrap { grid-template-columns: 1fr; gap: 16px; padding-top: 40px; padding-bottom: 40px; }
+    .about .avatar { width: 64px; height: 64px; font-size: 26px; }
+    .cards { grid-template-columns: repeat(3, 78%); gap: 16px; }
+    .more .all { display: none; }
   }
 
   @media print {
-    .mast nav, .photo, footer { display: none; }
-    .ingredients { position: static; }
+    body::before, .mast nav, .menu-btn, .photo, .tabs, .actions, .about, .more, footer, .progress, .progress-label, .stepper, .hint, .toast { display: none !important; }
+    .hero, .recipe { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
 <header class="mast">
-  <a class="logo" href="./">Pełny Talerz<span>.</span></a>
-  <nav>
+  <a class="logo" href="./"><i aria-hidden="true"></i>Pełny Talerz</a>
+  <nav aria-label="Kategorie">
     <a href="#">Obiady</a>
     <a href="#">Śniadania</a>
     <a href="#">Desery</a>
-    <a href="#">O mnie</a>
+    <a href="#o-mnie">O mnie</a>
   </nav>
+  <button class="menu-btn" aria-label="Menu"><span></span><span></span></button>
 </header>
 
 <main>
-  <section class="hero">
-    <div>
-      <p class="kicker">Szybki obiad · Makarony</p>
-      <h1>Penne z ragù <em>w&nbsp;30 minut</em></h1>
-      <p class="lede">Jeden garnek, puszka pomidorów i pół godziny. Ten makaron robię, kiedy nie chce mi się gotować, a i tak chcę zjeść coś porządnego.</p>
-      <p class="byline">Przepis: <strong>Adam Policht</strong> · 22 października 2026</p>
+  <section class="hero wrap">
+    <div class="hero-text">
+      <p class="crumbs rise"><a href="#">Obiady</a><span aria-hidden="true">/</span><a href="#">Makarony</a><span aria-hidden="true">/</span><b>Szybkie</b></p>
+      <h1 class="rise d1">Penne z ragù <em>w&nbsp;30&nbsp;minut</em></h1>
+      <p class="lede rise d2">Jeden garnek, puszka pomidorów i pół godziny. Ten makaron robię, kiedy nie chce mi się gotować, a i tak chcę zjeść coś porządnego.</p>
+      <div class="author rise d3">
+        <div class="avatar" aria-hidden="true">A</div>
+        <div><strong>Adam Policht</strong><span>22 października 2026</span></div>
+        <div class="actions">
+          <button class="icon-btn" id="share" aria-label="Udostępnij">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>
+          </button>
+          <button class="icon-btn" id="print" aria-label="Drukuj">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>
+          </button>
+        </div>
+      </div>
     </div>
+
     <figure class="photo">
-      <img src="penne.jpg" alt="Penne z mięsnym sosem pomidorowym posypane parmezanem, w białym talerzu">
+      <div class="frame"><img src="penne.jpg" alt="Penne z mięsnym sosem pomidorowym posypane parmezanem, w białym talerzu" fetchpriority="high"></div>
+      <div class="badge" aria-label="Gotowe w 30 minut"><span><b>30</b>minut</span></div>
     </figure>
   </section>
 
-  <section class="facts" aria-label="Szczegóły przepisu">
-    <dl>
-      <div><dt>Przygotowanie</dt><dd>10 min</dd></div>
-      <div><dt>Gotowanie</dt><dd>20 min</dd></div>
-      <div><dt>Porcje</dt><dd>4</dd></div>
-      <div><dt>Kalorie</dt><dd>620 kcal</dd></div>
+  <div class="wrap">
+    <dl class="facts" aria-label="Szczegóły przepisu">
+      <div><dt>Przygot.</dt><dd>10<small>min</small></dd></div>
+      <div><dt>Gotowanie</dt><dd>20<small>min</small></dd></div>
+      <div><dt>Porcje</dt><dd id="servings-fact">4</dd></div>
+      <div><dt>Kalorie</dt><dd>620<small>kcal</small></dd></div>
     </dl>
-  </section>
+  </div>
 
-  <section class="recipe">
-    <aside class="ingredients">
-      <h2>Składniki</h2>
-      <p class="sub">na 4 porcje · odhaczaj, co już masz</p>
+  <nav class="tabs" aria-label="Sekcje przepisu">
+    <div>
+      <span class="pill" aria-hidden="true"></span>
+      <a href="#skladniki" class="on">Składniki</a>
+      <a href="#przygotowanie">Przygotowanie</a>
+    </div>
+  </nav>
+
+  <section class="recipe wrap">
+    <aside class="ingredients" id="skladniki">
+      <div class="sec-head">
+        <div>
+          <h2>Składniki</h2>
+          <p class="sub">odhaczaj, co już masz</p>
+        </div>
+        <div class="stepper" role="group" aria-label="Liczba porcji">
+          <button type="button" id="minus" aria-label="Mniej porcji">−</button>
+          <output id="servings" aria-live="polite">4 porcje</output>
+          <button type="button" id="plus" aria-label="Więcej porcji">+</button>
+        </div>
+      </div>
+      <div class="progress"><i id="bar"></i></div>
+      <p class="progress-label" id="count">0 z 11 gotowe</p>
       <ul>
-        <li><label><input type="checkbox"><span><span class="qty">400 g</span> makaronu penne</span></label></li>
-        <li><label><input type="checkbox"><span><span class="qty">400 g</span> mięsa mielonego wołowo-wieprzowego</span></label></li>
-        <li><label><input type="checkbox"><span><span class="qty">1</span> cebula</span></label></li>
-        <li><label><input type="checkbox"><span><span class="qty">2</span> ząbki czosnku</span></label></li>
-        <li><label><input type="checkbox"><span><span class="qty">1 puszka</span> (400 g) pomidorów krojonych</span></label></li>
-        <li><label><input type="checkbox"><span><span class="qty">2 łyżki</span> koncentratu pomidorowego</span></label></li>
-        <li><label><input type="checkbox"><span><span class="qty">2 łyżki</span> oliwy</span></label></li>
-        <li><label><input type="checkbox"><span><span class="qty">1 łyżeczka</span> suszonego oregano</span></label></li>
-        <li><label><input type="checkbox"><span><span class="qty">szczypta</span> płatków chili</span></label></li>
-        <li><label><input type="checkbox"><span><span class="qty">50 g</span> parmezanu</span></label></li>
-        <li><label><input type="checkbox"><span>sól i świeżo mielony pieprz</span></label></li>
+        <li><label><input type="checkbox"><span class="txt"><span class="qty" data-q="400" data-u="g">400 g</span> makaronu penne</span></label></li>
+        <li><label><input type="checkbox"><span class="txt"><span class="qty" data-q="400" data-u="g">400 g</span> mięsa mielonego wołowo-wieprzowego</span></label></li>
+        <li><label><input type="checkbox"><span class="txt"><span class="qty" data-q="1">1</span> cebula</span></label></li>
+        <li><label><input type="checkbox"><span class="txt"><span class="qty" data-q="2">2</span> ząbki czosnku</span></label></li>
+        <li><label><input type="checkbox"><span class="txt"><span class="qty" data-q="1" data-u="puszka">1 puszka</span> (400 g) pomidorów krojonych</span></label></li>
+        <li><label><input type="checkbox"><span class="txt"><span class="qty" data-q="2" data-u="łyżki">2 łyżki</span> koncentratu pomidorowego</span></label></li>
+        <li><label><input type="checkbox"><span class="txt"><span class="qty" data-q="2" data-u="łyżki">2 łyżki</span> oliwy</span></label></li>
+        <li><label><input type="checkbox"><span class="txt"><span class="qty" data-q="1" data-u="łyżeczka">1 łyżeczka</span> suszonego oregano</span></label></li>
+        <li><label><input type="checkbox"><span class="txt"><span class="qty">szczypta</span> płatków chili</span></label></li>
+        <li><label><input type="checkbox"><span class="txt"><span class="qty" data-q="50" data-u="g">50 g</span> parmezanu</span></label></li>
+        <li><label><input type="checkbox"><span class="txt">sól i świeżo mielony pieprz</span></label></li>
       </ul>
     </aside>
 
-    <div class="steps">
-      <h2>Przygotowanie</h2>
-      <p class="sub">6 kroków · około 30 minut</p>
+    <div class="steps" id="przygotowanie">
+      <div class="sec-head">
+        <div>
+          <h2>Przygotowanie</h2>
+          <p class="sub">6 kroków · około 30 minut</p>
+        </div>
+      </div>
       <ol>
-        <li>Nastaw duży garnek osolonej wody na makaron.</li>
-        <li>Cebulę posiekaj drobno, czosnek przeciśnij. Na oliwie zeszklij cebulę przez 3–4 minuty, dodaj czosnek i smaż jeszcze 30 sekund.</li>
-        <li>Dodaj mięso i smaż na dużym ogniu, rozbijając łyżką, aż się zrumieni – około 6 minut.</li>
-        <li>Wmieszaj koncentrat, smaż minutę. Dodaj pomidory, oregano i chili. Duś 10 minut na małym ogniu, dopraw solą i pieprzem.</li>
-        <li>W tym czasie ugotuj penne al dente według instrukcji na opakowaniu. Odlej pół szklanki wody z gotowania.</li>
-        <li>Przełóż makaron do sosu, dolej trochę wody z gotowania i wymieszaj, aż sos oblepi makaron. Podawaj posypane tartym parmezanem.</li>
+        <li><span class="n">01</span><div>Nastaw duży garnek osolonej wody na makaron.</div></li>
+        <li><span class="n">02</span><div>Cebulę posiekaj drobno, czosnek przeciśnij. Na oliwie zeszklij cebulę, dodaj czosnek i smaż jeszcze 30 sekund.<br><span class="time">4 min</span></div></li>
+        <li><span class="n">03</span><div>Dodaj mięso i smaż na dużym ogniu, rozbijając łyżką, aż się zrumieni.<br><span class="time">6 min</span></div></li>
+        <li><span class="n">04</span><div>Wmieszaj koncentrat, smaż minutę. Dodaj pomidory, oregano i chili. Duś na małym ogniu, dopraw solą i pieprzem.<br><span class="time">10 min</span></div></li>
+        <li><span class="n">05</span><div>W tym czasie ugotuj penne al dente według instrukcji na opakowaniu. Odlej pół szklanki wody z gotowania.</div></li>
+        <li><span class="n">06</span><div>Przełóż makaron do sosu, dolej trochę wody z gotowania i wymieszaj, aż sos oblepi makaron. Podawaj posypane tartym parmezanem.</div></li>
       </ol>
+      <p class="hint">Stuknij krok, żeby oznaczyć go jako zrobiony.</p>
       <div class="tip">
         <strong>Mała rada</strong>
-        Nie wylewaj całej wody z makaronu. Skrobia z niej sprawia, że sos robi się kremowy i trzyma się penne, zamiast zostawać na dnie talerza.
+        <p>Nie wylewaj całej wody z makaronu. Skrobia z niej sprawia, że sos robi się kremowy i trzyma się penne, zamiast zostawać na dnie talerza.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="o-mnie">
+    <div class="wrap">
+      <div class="avatar" aria-hidden="true">A</div>
+      <div>
+        <h3>Cześć, tu Adam</h3>
+        <p>Gotuję po pracy, więc moje przepisy mają być szybkie, z produktów z osiedlowego sklepu i bez zmywania pięciu garnków. Tu zapisuję to, co u mnie wraca na talerz najczęściej.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="more">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Może też <em>to?</em></h2>
+        <a class="all" href="#">Wszystkie przepisy →</a>
+      </div>
+      <div class="cards">
+        <a class="card" href="#">
+          <div class="img"><img src="szakszuka.jpg" alt="Szakszuka na patelni z natką pietruszki" loading="lazy"></div>
+          <p class="cat">Śniadania</p>
+          <h4>Szakszuka z jednej patelni</h4>
+          <p class="meta">25 min · 2 porcje</p>
+        </a>
+        <a class="card" href="#">
+          <div class="img"><img src="pesto.jpg" alt="Makaron farfalle z pesto i pomidorkami" loading="lazy"></div>
+          <p class="cat">Makarony</p>
+          <h4>Farfalle z pesto i pomidorkami</h4>
+          <p class="meta">15 min · 2 porcje</p>
+        </a>
+        <a class="card" href="#">
+          <div class="img"><img src="pizza.jpg" alt="Pizza z salami i bazylią" loading="lazy"></div>
+          <p class="cat">Weekend</p>
+          <h4>Domowa pizza na cienkim cieście</h4>
+          <p class="meta">50 min · 4 porcje</p>
+        </a>
       </div>
     </div>
   </section>
 </main>
 
 <footer>
-  <span>© 2026 Pełny Talerz · Adam Policht</span>
-  <span>Zdjęcie: Unsplash</span>
+  <div class="wrap">
+    <span>© 2026 Pełny Talerz · Adam Policht</span>
+    <span>Zdjęcia: Unsplash</span>
+  </div>
 </footer>
 
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+
+  // ingredient progress
+  const boxes = $$('.ingredients input');
+  const syncProgress = () => {
+    const n = boxes.filter(b => b.checked).length;
+    $('#bar').style.width = (n / boxes.length * 100) + '%';
+    $('#count').textContent = n === boxes.length ? 'Wszystko gotowe, do garów!' : `${n} z ${boxes.length} gotowe`;
+  };
+  boxes.forEach(b => b.addEventListener('change', syncProgress));
+
+  // servings scaling
+  const BASE = 4;
+  let servings = BASE;
+  const plural = n => n === 1 ? 'porcja' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 'porcje' : 'porcji';
+  const units = {
+    puszka: n => n === 1 ? 'puszka' : n <= 4 ? 'puszki' : 'puszek',
+    'łyżki': n => n === 1 ? 'łyżka' : n <= 4 ? 'łyżki' : 'łyżek',
+    'łyżeczka': n => n === 1 ? 'łyżeczka' : n <= 4 ? 'łyżeczki' : 'łyżeczek',
+    g: () => 'g'
+  };
+  const fmt = v => {
+    if (v >= 20) return String(Math.round(v / 10) * 10);
+    const r = Math.round(v * 2) / 2;
+    return Number.isInteger(r) ? String(r) : (Math.floor(r) ? Math.floor(r) + '½' : '½');
+  };
+  const render = () => {
+    $('#servings').textContent = `${servings} ${plural(servings)}`;
+    $('#servings-fact').textContent = servings;
+    $('#minus').disabled = servings <= 1;
+    $('#plus').disabled = servings >= 12;
+    $$('.qty[data-q]').forEach(el => {
+      const v = el.dataset.q * servings / BASE;
+      const num = fmt(v);
+      const u = el.dataset.u;
+      const val = parseFloat(num.replace('½', '.5')) || .5;
+      el.textContent = u ? `${num} ${units[u](val)}` : num;
+      el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+    });
+  };
+  $('#minus').onclick = () => { servings = Math.max(1, servings - 1); render(); };
+  $('#plus').onclick = () => { servings = Math.min(12, servings + 1); render(); };
+
+  // steps: tap to mark done
+  $$('.steps li').forEach(li => li.addEventListener('click', () => li.classList.toggle('done')));
+
+  // toast
+  let tt;
+  const toast = msg => { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2000); };
+
+  $('#print').onclick = () => window.print();
+  $('#share').onclick = async () => {
+    const data = { title: document.title, url: location.href };
+    try {
+      if (navigator.share) await navigator.share(data);
+      else { await navigator.clipboard.writeText(location.href); toast('Link skopiowany'); }
+    } catch (e) { /* user cancelled */ }
+  };
+
+  // mobile tabs follow scroll
+  const pill = $('.tabs .pill'), tabs = $$('.tabs a');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const right = e.target.id === 'przygotowanie';
+      pill.classList.toggle('right', right);
+      tabs[0].classList.toggle('on', !right);
+      tabs[1].classList.toggle('on', right);
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  ['#skladniki', '#przygotowanie'].forEach(s => io.observe($(s)));
+</script>
 </body>
 </html>
