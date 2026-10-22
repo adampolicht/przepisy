@@ -408,7 +408,10 @@
       position: absolute; z-index: 1; bottom: calc(var(--lip) - 14px); left: 50%; width: 36px; height: 4px; margin-left: -18px;
       border-radius: 4px; background: var(--paper-3);
     }
+    /* the lip + handle only exist once docked; otherwise the fractional clip edge leaks a 1px cream line */
+    .peek::after, .peek i { visibility: hidden; }
     body.docked .peek { clip-path: none; }
+    body.docked .peek::after, body.docked .peek i { visibility: visible; }
 
     .badge-m {
       display: grid; left: auto; right: 20px; bottom: auto; top: -44px;
