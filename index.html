@@ -177,7 +177,7 @@
   .facts dd small { font-size: .6em; font-weight: 400; color: var(--ink-soft); margin-left: 2px; }
 
   /* ---------- mobile section tabs ---------- */
-  .tabs { display: none; }
+  .tabs, .peek, .badge-m { display: none; }
 
   /* ---------- recipe body ---------- */
   .recipe {
@@ -300,7 +300,7 @@
   @media (prefers-reduced-motion: no-preference) {
     .rise { animation: rise .8s var(--ease) both; }
     .rise.d1 { animation-delay: .08s; } .rise.d2 { animation-delay: .16s; } .rise.d3 { animation-delay: .24s; }
-    .photo .frame img { animation: settle 1.4s var(--ease) both; }
+    .photo .frame img, .peek img { animation: settle 1.4s var(--ease) both; }
     .badge { animation: pop .6s .5s var(--ease) both; }
     @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
     @keyframes settle { from { transform: scale(1.06); } }
@@ -321,21 +321,49 @@
   /* ---------- phone ---------- */
   @media (max-width: 760px) {
     body { font-size: 16px; }
-    .mast { position: absolute; inset: 0 0 auto; z-index: 5; color: #fff; }
+    /* photo pinned under a bottom sheet that docks at 20% of the screen (sheet = 80%) */
+    :root { --ph: min(112vw, 60svh); --dock: 20svh; --lip: 26px; }
+    html { scroll-padding-top: calc(var(--dock) + var(--lip) + 64px); }
+    .mast { position: fixed; inset: 0 0 auto; z-index: 6; color: #fff; }
     .mast .logo svg { color: #fff; }
     .menu-btn span { background: #fff; }
     .mast { background: linear-gradient(rgba(20,10,5,.45), transparent); padding-bottom: 40px; }
 
     .hero { padding: 0; gap: 0; }
-    .photo { order: -1; }
-    .photo .frame { aspect-ratio: 1 / 1.08; border-radius: 0; box-shadow: none; }
-    .badge { left: auto; right: 20px; bottom: 44px; width: 88px; height: 88px; font-size: 11px; }
-    .badge b { font-size: 30px; }
+    .photo { position: fixed; inset: 0 0 auto; height: var(--ph); z-index: 0; }
+    .photo .frame { height: 100%; aspect-ratio: auto; border-radius: 0; box-shadow: none; }
+    .photo .badge { display: none; }
+
+    /* top slice of the same photo, drawn above the sheet so content scrolls "under" the dock line */
+    .peek {
+      display: block; position: fixed; inset: 0 0 auto; z-index: 4; pointer-events: none;
+      height: calc(var(--dock) + var(--lip)); overflow: hidden;
+      clip-path: inset(0 0 var(--lip) 0);
+    }
+    .peek img { width: 100%; height: var(--ph); object-fit: cover; }
+    .peek::after {
+      content: ""; position: absolute; inset: auto 0 0; height: var(--lip);
+      background: var(--paper); border-radius: var(--lip) var(--lip) 0 0;
+    }
+    .peek i {
+      position: absolute; z-index: 1; bottom: calc(var(--lip) - 14px); left: 50%; width: 36px; height: 4px; margin-left: -18px;
+      border-radius: 4px; background: var(--paper-3);
+    }
+    body.docked .peek { clip-path: none; }
+
+    .badge-m {
+      display: grid; left: auto; right: 20px; bottom: auto; top: -44px;
+      width: 88px; height: 88px; font-size: 11px; z-index: 3;
+      transition: opacity .2s, scale .2s;
+    }
+    .badge-m b { font-size: 30px; }
     .hero-text {
       position: relative; z-index: 2; background: var(--paper);
-      margin-top: -28px; border-radius: 26px 26px 0 0;
+      margin-top: calc(var(--ph) - var(--lip)); border-radius: var(--lip) var(--lip) 0 0;
       padding: 30px var(--gutter) 28px;
     }
+    main > .facts-wrap, .recipe, .about { position: relative; z-index: 2; background: var(--paper); }
+    .more, footer { position: relative; z-index: 2; }
     .hero-text::before {
       content: ""; position: absolute; top: 10px; left: 50%; width: 36px; height: 4px; margin-left: -18px;
       border-radius: 4px; background: var(--paper-3);
@@ -355,9 +383,9 @@
     .facts dd small { display: block; margin: 0; font-size: 11px; }
 
     .tabs {
-      display: flex; position: sticky; top: 0; z-index: 10;
+      display: flex; position: sticky; top: calc(var(--dock) + var(--lip) - 4px); z-index: 3;
       background: rgba(246,240,230,.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      padding: 10px var(--gutter); border-bottom: 1px solid var(--rule); margin-top: 20px;
+      padding: 10px var(--gutter); border-bottom: 1px solid var(--rule); margin-top: 0; padding-top: 30px;
     }
     .tabs div { display: flex; flex: 1; background: var(--paper-2); border-radius: 99px; padding: 3px; position: relative; }
     .tabs a {
@@ -403,9 +431,12 @@
   <button class="menu-btn" aria-label="Menu"><span></span><span></span></button>
 </header>
 
+<div class="peek" aria-hidden="true"><img src="penne.jpg" alt=""><i></i></div>
+
 <main>
   <section class="hero wrap">
     <div class="hero-text">
+      <div class="badge badge-m" aria-hidden="true"><span><b>30</b>minutes</span></div>
       <p class="crumbs rise"><a href="#">Dinners</a><span aria-hidden="true">/</span><a href="#">Pasta</a><span aria-hidden="true">/</span><b>Quick</b></p>
       <h1 class="rise d1">Penne ragù <em>in&nbsp;30&nbsp;minutes</em></h1>
       <p class="lede rise d2">One pot, a can of tomatoes and half an hour. This is the pasta I make when I can’t be bothered to cook but still want a proper dinner.</p>
@@ -429,7 +460,7 @@
     </figure>
   </section>
 
-  <div class="wrap">
+  <div class="wrap facts-wrap">
     <dl class="facts" aria-label="Recipe details">
       <div><dt>Prep</dt><dd>10<small>min</small></dd></div>
       <div><dt>Cook</dt><dd>20<small>min</small></dd></div>
@@ -621,6 +652,28 @@
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   ['#ingredients', '#method'].forEach(s => io.observe($(s)));
+
+  // mobile bottom sheet: dock state + badge fade as the sheet rises
+  const mq = matchMedia('(max-width: 760px)');
+  const sheet = $('.hero-text'), badgeM = $('.badge-m');
+  let dockY = 0;
+  const measure = () => {
+    if (!mq.matches) return;
+    const dock = $('.peek').offsetHeight - parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--lip'));
+    dockY = sheet.getBoundingClientRect().top + scrollY - dock;
+    onScroll();
+  };
+  const onScroll = () => {
+    if (!mq.matches) return;
+    document.body.classList.toggle('docked', scrollY >= dockY - 0.5);
+    const fade = Math.min(1, Math.max(0, (dockY - scrollY) / 120));
+    badgeM.style.opacity = fade;
+    badgeM.style.scale = .85 + fade * .15;
+  };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', measure);
+  addEventListener('load', measure);
+  measure();
 </script>
 </body>
 </html>
